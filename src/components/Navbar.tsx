@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useCart } from '@/store/cartStore';
 import { useAuth } from '@/store/authStore';
@@ -72,8 +73,18 @@ export default function Navbar() {
             </div>
           )}
 
-          <Link href="/" className="flex items-center space-x-2 flex-1 justify-center">
-            <span className="text-2xl font-bold text-blue-600">Akshaya Associates</span>
+          <Link href="/" className="flex items-center space-x-3 flex-1 justify-center">
+            <Image 
+              src="/logo.png" 
+              alt="Akshaya Associates Logo" 
+              width={50} 
+              height={50}
+              className="h-12 w-auto"
+            />
+            <div className="hidden sm:block">
+              <div className="text-sm font-bold text-red-600">Akshaya</div>
+              <div className="text-xs font-bold text-gray-900">ASSOCIATES</div>
+            </div>
           </Link>
 
           <div className="flex items-center space-x-4">

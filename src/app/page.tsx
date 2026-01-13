@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { categories } from '@/data/products';
 import { useCart } from '@/store/cartStore';
 import LoadingPage from '@/components/LoadingPage';
@@ -71,6 +72,15 @@ export default function Home() {
       <section className="bg-black text-white py-24 md:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
+            <div className="mb-8 flex justify-center">
+              <Image 
+                src="/logo.png" 
+                alt="Akshaya Associates Logo" 
+                width={120}
+                height={120}
+                className="h-28 w-auto drop-shadow-lg"
+              />
+            </div>
             <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tight">
               AKSHAYA<br />ASSOCIATES
             </h1>
