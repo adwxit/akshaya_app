@@ -19,10 +19,12 @@ interface Product {
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const addItem = useCart((state) => state.addItem);
 
   useEffect(() => {
+    setMounted(true);
     // Show loading page for initial load
     const timer = setTimeout(() => {
       setLoading(false);
@@ -55,34 +57,38 @@ export default function Home() {
     toast.success(`${product.name} added to cart!`);
   };
 
+  if (!mounted) {
+    return null;
+  }
+
   if (loading) {
     return <LoadingPage />;
   }
 
   return (
-    <div>
+    <div className="bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
+      <section className="bg-black text-white py-24 md:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Welcome to Akshaya Associates
+            <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tight">
+              AKSHAYA<br />ASSOCIATES
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-blue-100">
-              Authorized Distributor of Lab Equipment, Chemicals, Glassware, Surgicals & Hospital Wares
+            <p className="text-xl md:text-2xl mb-8 font-medium text-gray-300 max-w-2xl mx-auto">
+              Premium Lab Equipment • Chemicals • Glassware • Surgical • Hospital Wares
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/products"
-                className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition"
+                className="bg-white text-black px-8 py-4 rounded-none font-black text-lg hover:bg-gray-100 transition"
               >
-                Browse Products
+                BROWSE COLLECTION
               </Link>
               <Link
                 href="/products?category=lab-equipment"
-                className="bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-600 transition border border-blue-500"
+                className="bg-gray-800 text-white px-8 py-4 rounded-none font-black text-lg hover:bg-gray-900 transition border-2 border-white"
               >
-                Lab Equipment
+                LAB EQUIPMENT
               </Link>
             </div>
           </div>
@@ -90,18 +96,18 @@ export default function Home() {
       </section>
 
       {/* Categories Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Our Product Categories</h2>
+          <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-16 tracking-tight">SHOP BY CATEGORY</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             {categories.map((category) => (
               <Link
                 key={category.id}
                 href={`/products?category=${category.id}`}
-                className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition group"
+                className="bg-gray-50 border-2 border-gray-200 hover:border-black p-8 text-center group transition-all duration-300"
               >
-                <div className="text-5xl mb-4">{category.icon}</div>
-                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition">
+                <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">{category.icon}</div>
+                <h3 className="text-lg font-black text-gray-900 group-hover:text-black transition uppercase">
                   {category.name}
                 </h3>
               </Link>
@@ -111,47 +117,57 @@ export default function Home() {
       </section>
 
       {/* Featured Products Section */}
-      <section className="py-16">
+      <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">Featured Products</h2>
+          <div className="flex justify-between items-end mb-16">
+            <h2 className="text-5xl md:text-6xl font-black text-gray-900 tracking-tight">FEATURED PRODUCTS</h2>
             <Link
               href="/products"
-              className="text-blue-600 hover:text-blue-700 font-semibold"
+              className="text-black hover:text-gray-600 font-black text-lg underline"
             >
-              View All →
+              VIEW ALL →
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
+                className="bg-white border-2 border-gray-200 hover:border-black transition-all duration-300 overflow-hidden group"
               >
-                <div className="h-48 bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-400">Product Image</span>
+                <div className="h-64 bg-gray-100 flex items-center justify-center">
+                  <span className="text-gray-400 text-sm">PRODUCT IMAGE</span>
                 </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.description}</p>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-2xl font-bold text-blue-600">
+                <div className="p-6">
+                  <h3 className="font-black text-sm tracking-wider text-gray-900 mb-2 line-clamp-2 uppercase">
+                    {product.name}
+                  </h3>
+                  <p className="text-xs text-gray-600 text-base mb-4 line-clamp-2 font-medium">
+                    {product.description}
+                  </p>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-2xl font-black text-black">
                       ₹{product.price.toLocaleString()}
                     </span>
                     <span
-                      className={`text-xs px-2 py-1 rounded ${
-                        product.inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      className={`text-xs font-bold px-3 py-1 ${
+                        product.inStock
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-red-100 text-red-800'
                       }`}
                     >
-                      {product.inStock ? 'In Stock' : 'Out of Stock'}
+                      {product.inStock ? 'IN STOCK' : 'SOLD OUT'}
                     </span>
                   </div>
                   <button
                     onClick={() => handleAddToCart(product)}
                     disabled={!product.inStock}
-                    className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    className={`w-full py-3 font-black text-sm tracking-wide transition-all duration-300 ${
+                      product.inStock
+                        ? 'bg-black text-white hover:bg-gray-900'
+                        : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                    }`}
                   >
-                    Add to Cart
+                    ADD TO CART
                   </button>
                 </div>
               </div>
@@ -161,36 +177,32 @@ export default function Home() {
       </section>
 
       {/* Why Choose Us Section */}
-      <section className="py-16 bg-blue-50">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Why Choose Us</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+          <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-16 text-center tracking-tight">
+            WHY CHOOSE US
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div className="text-center group">
+              <div className="bg-black text-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <span className="text-3xl">✓</span>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Authorized Distributor</h3>
-              <p className="text-gray-600">Genuine products from authorized manufacturers</p>
+              <h3 className="text-xl font-black mb-3 uppercase">AUTHORIZED DISTRIBUTOR</h3>
+              <p className="text-gray-600 font-medium">Genuine products from authorized manufacturers</p>
             </div>
-            <div className="text-center">
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div className="text-center group">
+              <div className="bg-black text-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <span className="text-3xl">⚡</span>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Fast Delivery</h3>
-              <p className="text-gray-600">Quick and reliable delivery to your doorstep</p>
+              <h3 className="text-xl font-black mb-3 uppercase">FAST DELIVERY</h3>
+              <p className="text-gray-600 font-medium">Quick and reliable delivery to your doorstep</p>
             </div>
-            <div className="text-center">
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div className="text-center group">
+              <div className="bg-black text-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <span className="text-3xl">💰</span>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Competitive Pricing</h3>
-              <p className="text-gray-600">Best prices in the market with quality assurance</p>
+              <h3 className="text-xl font-black mb-3 uppercase">BEST PRICES</h3>
+              <p className="text-gray-600 font-medium">Best prices in the market with quality assurance</p>
             </div>
           </div>
         </div>

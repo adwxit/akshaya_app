@@ -1,15 +1,45 @@
-// Use dynamic import to work around Prisma client resolution issues
-const { PrismaClient } = await import('../node_modules/.prisma/client/index.js');
+import mongoose from 'mongoose';
 import { config } from 'dotenv';
 
 // Load environment variables from project root
 config();
 
-const databaseUrl = process.env.DATABASE_URL || 'file:./dev.db';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/akshaya-associates';
 
-const prisma = new PrismaClient({
-  datasourceUrl: databaseUrl,
-});
+// Define Product Schema
+const productSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'Product name is required'],
+    },
+    description: {
+      type: String,
+      required: [true, 'Product description is required'],
+    },
+    price: {
+      type: Number,
+      required: [true, 'Product price is required'],
+      min: [0, 'Price cannot be negative'],
+    },
+    image: {
+      type: String,
+      default: '/api/placeholder/400/300',
+    },
+    category: {
+      type: String,
+      required: [true, 'Product category is required'],
+      enum: ['lab-equipment', 'chemicals', 'glassware', 'surgical', 'hospital-wares'],
+    },
+    inStock: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  { timestamps: true }
+);
+
+const Product = mongoose.model('Product', productSchema);
 
 const products = [
   // Lab Equipment
@@ -165,7 +195,7 @@ const products = [
     description: 'Premium stainless steel surgical scissors',
     price: 1200,
     image: '/api/placeholder/400/300',
-    category: 'surgicals',
+    category: 'surgical',
     inStock: true,
   },
   {
@@ -173,7 +203,7 @@ const products = [
     description: 'Surgical forceps for tissue handling',
     price: 950,
     image: '/api/placeholder/400/300',
-    category: 'surgicals',
+    category: 'surgical',
     inStock: true,
   },
   {
@@ -181,7 +211,7 @@ const products = [
     description: 'Surgical scalpel with replaceable blades',
     price: 650,
     image: '/api/placeholder/400/300',
-    category: 'surgicals',
+    category: 'surgical',
     inStock: true,
   },
   {
@@ -189,7 +219,7 @@ const products = [
     description: 'Locking needle holder for suturing',
     price: 1800,
     image: '/api/placeholder/400/300',
-    category: 'surgicals',
+    category: 'surgical',
     inStock: true,
   },
   {
@@ -197,7 +227,7 @@ const products = [
     description: 'Curved hemostat for clamping vessels',
     price: 1100,
     image: '/api/placeholder/400/300',
-    category: 'surgicals',
+    category: 'surgical',
     inStock: true,
   },
   {
@@ -205,7 +235,7 @@ const products = [
     description: 'Complete surgical dressing tray',
     price: 2500,
     image: '/api/placeholder/400/300',
-    category: 'surgicals',
+    category: 'surgical',
     inStock: true,
   },
   // Hospital Wares
@@ -260,26 +290,27 @@ const products = [
 ];
 
 async function main() {
-  console.log('Seeding database...');
+  try {
+    console.log('Connecting to MongoDB...');
+    await mongoose.connect(MONGODB_URI);
+    console.log('Connected to MongoDB successfully');
 
-  // Clear existing products
-  await prisma.product.deleteMany();
-  
-  // Create products
-  for (const product of products) {
-    await prisma.product.create({
-      data: product,
-    });
+    console.log('Seeding database...');
+
+    // Clear existing products
+    await Product.deleteMany({});
+    console.log('Cleared existing products');
+
+    // Create products
+    const createdProducts = await Product.insertMany(products);
+    console.log(`Seeded ${createdProducts.length} products successfully`);
+  } catch (error) {
+    console.error('Error seeding database:', error);
+    process.exit(1);
+  } finally {
+    await mongoose.disconnect();
+    console.log('Disconnected from MongoDB');
   }
-
-  console.log(`Seeded ${products.length} products`);
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+main();

@@ -1,5 +1,8 @@
-require('dotenv').config();
-const mongoose = require('mongoose');
+
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+
+dotenv.config();
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/akshaya-associates';
 
@@ -258,8 +261,6 @@ async function main() {
     console.log('✅ Connected to MongoDB');
 
     // Import Product model
-    // Need to use dynamic import or require with proper path
-    const mongoose = require('mongoose');
     const ProductSchema = new mongoose.Schema({
       name: { type: String, required: true },
       description: { type: String, required: true },
@@ -287,4 +288,4 @@ async function main() {
   }
 }
 
-main();
+main().catch(console.error);

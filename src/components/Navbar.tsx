@@ -1,12 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useCart } from '@/store/cartStore';
 import { useAuth } from '@/store/authStore';
 
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const cartItems = useCart((state) => state.items);
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
   const user = useAuth((state) => state.user);
@@ -14,54 +14,79 @@ export default function Navbar() {
 
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
+  const handleLogout = () => {
+    logout();
+    setIsProfileMenuOpen(false);
+  };
+
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="flex items-center space-x-2">
+          {/* Hamburger Profile Menu - Top Left */}
+          {isAuthenticated && (
+            <div className="relative">
+              <button
+                onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                className="p-2 rounded-md text-gray-700 hover:bg-gray-100 transition"
+                title="Profile Menu"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
+
+              {isProfileMenuOpen && (
+                <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-50">
+                  <div className="px-4 py-2 border-b">
+                    <p className="text-sm font-semibold text-gray-900">{user?.name || user?.email}</p>
+                    <p className="text-xs text-gray-600">{user?.email}</p>
+                  </div>
+                  <Link
+                    href="/orders"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition"
+                    onClick={() => setIsProfileMenuOpen(false)}
+                  >
+                    📦 My Orders
+                  </Link>
+                  <Link
+                    href="/settings"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition"
+                    onClick={() => setIsProfileMenuOpen(false)}
+                  >
+                    ⚙️ Settings
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition border-t"
+                  >
+                    🚪 Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          <Link href="/" className="flex items-center space-x-2 flex-1 justify-center">
             <span className="text-2xl font-bold text-blue-600">Akshaya Associates</span>
           </Link>
 
-          <div className="hidden md:flex items-center space-x-8">
-            <Link href="/products" className="text-gray-700 hover:text-blue-600 transition">
-              Products
-            </Link>
-            <Link href="/products?category=lab-equipment" className="text-gray-700 hover:text-blue-600 transition">
-              Lab Equipment
-            </Link>
-            <Link href="/products?category=chemicals" className="text-gray-700 hover:text-blue-600 transition">
-              Chemicals
-            </Link>
-            <Link href="/products?category=glassware" className="text-gray-700 hover:text-blue-600 transition">
-              Glassware
-            </Link>
-            <Link href="/products?category=surgicals" className="text-gray-700 hover:text-blue-600 transition">
-              Surgicals
-            </Link>
-            <Link href="/products?category=hospital-wares" className="text-gray-700 hover:text-blue-600 transition">
-              Hospital Wares
-            </Link>
-          </div>
-
           <div className="flex items-center space-x-4">
             {isAuthenticated ? (
-              <>
-                <span className="text-gray-700 hidden sm:block">Welcome, {user?.name || user?.email}</span>
-                <button
-                  onClick={logout}
-                  className="text-gray-700 hover:text-blue-600 transition"
-                >
-                  Logout
-                </button>
-              </>
+              <span className="text-gray-700 hidden sm:block text-sm">Welcome, {user?.name || user?.email}</span>
             ) : (
               <>
-                <Link href="/login" className="text-gray-700 hover:text-blue-600 transition">
+                <Link href="/login" className="text-gray-700 hover:text-blue-600 transition text-sm">
                   Login
                 </Link>
                 <Link
                   href="/signup"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+                  className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition text-sm"
                 >
                   Sign Up
                 </Link>
@@ -87,39 +112,8 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden text-gray-700"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
           </div>
         </div>
-
-        {isMenuOpen && (
-          <div className="md:hidden pb-4">
-            <Link href="/products" className="block py-2 text-gray-700 hover:text-blue-600">
-              Products
-            </Link>
-            <Link href="/products?category=lab-equipment" className="block py-2 text-gray-700 hover:text-blue-600">
-              Lab Equipment
-            </Link>
-            <Link href="/products?category=chemicals" className="block py-2 text-gray-700 hover:text-blue-600">
-              Chemicals
-            </Link>
-            <Link href="/products?category=glassware" className="block py-2 text-gray-700 hover:text-blue-600">
-              Glassware
-            </Link>
-            <Link href="/products?category=surgicals" className="block py-2 text-gray-700 hover:text-blue-600">
-              Surgicals
-            </Link>
-            <Link href="/products?category=hospital-wares" className="block py-2 text-gray-700 hover:text-blue-600">
-              Hospital Wares
-            </Link>
-          </div>
-        )}
       </div>
     </nav>
   );

@@ -290,6 +290,6 @@ export const categories = [
   { id: 'lab-equipment', name: 'Lab Equipment', icon: '🔬' },
   { id: 'chemicals', name: 'Chemicals', icon: '🧪' },
   { id: 'glassware', name: 'Glassware', icon: '⚗️' },
-  { id: 'surgicals', name: 'Surgicals', icon: '🔪' },
+  { id: 'surgical', name: 'Surgical', icon: '🔪' },
   { id: 'hospital-wares', name: 'Hospital Wares', icon: '🏥' },
 ];

@@ -64,9 +64,9 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-sm">
-              <li>Email: info@akshayaassociates.com</li>
-              <li>Phone: +91 XXXXX XXXXX</li>
-              <li>Address: Your Business Address</li>
+              <li>Email: akshayately@gmail.com</li>
+              <li>Phone: +91 944724062 / 0490 2344022</li>
+              <li>Address: 10/359, M.G Bazar, Old Bus Stand, Tellicherry, Kannur - 670101</li>
             </ul>
           </div>
         </div>
