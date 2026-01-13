@@ -1,0 +1,15 @@
+{
+  "buildCommand": "next build",
+  "devCommand": "next dev --turbopack",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "nodeVersion": "20.x",
+  "env": {
+    "MONGODB_URI": {
+      "description": "MongoDB connection string"
+    },
+    "JWT_SECRET": {
+      "description": "JWT secret for authentication"
+    }
+  }
+}

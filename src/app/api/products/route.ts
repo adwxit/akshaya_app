@@ -5,7 +5,9 @@ import Product from '@/models/Product';
 export async function GET(request: NextRequest) {
   try {
     // Connect to database
+    console.log('Connecting to MongoDB...');
     await connectDB();
+    console.log('MongoDB connected');
 
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get('category');
@@ -28,7 +30,9 @@ export async function GET(request: NextRequest) {
       ];
     }
 
+    console.log('Fetching products with query:', query);
     const products = await Product.find(query).sort({ createdAt: -1 }).lean();
+    console.log('Found products:', products.length);
 
     interface MongoProduct {
       _id: { toString(): string };
@@ -59,7 +63,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Products fetch error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to fetch products', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }
