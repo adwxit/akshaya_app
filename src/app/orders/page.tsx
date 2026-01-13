@@ -34,34 +34,34 @@ export default function OrdersPage() {
       return;
     }
 
+    const fetchOrders = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          router.push('/login');
+          return;
+        }
+
+        const response = await fetch('/api/orders', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setOrders(data.orders || []);
+        } else if (response.status === 401) {
+          router.push('/login');
+        }
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchOrders();
   }, [isAuthenticated, router]);
-
-  const fetchOrders = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        router.push('/login');
-        return;
-      }
-
-      const response = await fetch('/api/orders', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setOrders(data.orders || []);
-      } else if (response.status === 401) {
-        router.push('/login');
-      }
-    } catch (error) {
-      console.error('Error fetching orders:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (!isAuthenticated) return null;
 
@@ -79,7 +79,7 @@ export default function OrdersPage() {
 
       {orders.length === 0 ? (
         <div className="bg-white rounded-lg shadow p-8 text-center">
-          <p className="text-gray-600 mb-4">You haven't placed any orders yet.</p>
+          <p className="text-gray-600 mb-4">You have not placed any orders yet.</p>
           <Link href="/products" className="text-blue-600 hover:underline">
             Continue Shopping →
           </Link>
