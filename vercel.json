@@ -2,13 +2,5 @@
   "buildCommand": "next build",
   "devCommand": "next dev --turbopack",
   "installCommand": "npm install",
-  "framework": "nextjs",
-  "env": {
-    "MONGODB_URI": {
-      "description": "MongoDB connection string"
-    },
-    "JWT_SECRET": {
-      "description": "JWT secret for authentication"
-    }
-  }
+  "framework": "nextjs"
 }
